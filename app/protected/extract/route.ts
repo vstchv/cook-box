@@ -12,7 +12,6 @@ export async function POST(request) {
     const ingredients: string[] = [];
     const instructions: string[] = [];
 
-    // Example selectors (you need to customize these)
     $("selector-for-ingredients").each((i, elem) => {
       ingredients.push($(elem).text().trim());
     });
