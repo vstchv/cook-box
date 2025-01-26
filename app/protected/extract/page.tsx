@@ -16,10 +16,10 @@ export default function Extract() {
     console.log(event);
     setError("");
     setResult(null);
-
+    console.log("api/extract");
     try {
-      console.log("trying to fetch api/recipes/extract");
-      const response = await fetch("api/extract", {
+   
+      const response = await fetch("/api/protected/extract", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,6 +34,7 @@ export default function Extract() {
 
       const data = await response.json();
       setResult(data);
+      console.log(data);
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
     }
@@ -56,6 +57,13 @@ export default function Extract() {
       {error && (
         <div className="mt-4 text-red-500">
           <p>Error: {error}</p>
+        </div>
+      )}
+
+      {result && (
+        <div className="mt-4">
+          <h2 className="text-xl font-semibold mb-2">Title</h2>
+          <p>{result.title}</p>
         </div>
       )}
 
