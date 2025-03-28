@@ -8,7 +8,7 @@ import { parseMessage } from "@/utils/utils";
 import Link from "next/link";
 
 interface LoginPageProps {
-  searchParams: SearchParams;
+  searchParams?: SearchParams;
 }
 export default function Login({ searchParams }: LoginPageProps) {
   const message = parseMessage(searchParams);

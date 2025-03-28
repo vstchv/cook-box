@@ -8,11 +8,11 @@ import { parseMessage } from "@/utils/utils";
 import Link from "next/link";
 
 interface SignUpPageProps {
-  searchParams: SearchParams;
+  searchParams?: SearchParams;
 }
 export default function Signup({ searchParams }: SignUpPageProps) {
   const message = parseMessage(searchParams);
-  if ("message" in searchParams) {
+  if (message) {
     return (
       <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
         {message && <FormMessage message={message} />}

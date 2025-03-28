@@ -8,7 +8,7 @@ import { parseMessage } from "@/utils/utils";
 import Link from "next/link";
 
 interface ForgotPasswordPageProps {
-  searchParams: SearchParams;
+  searchParams?: SearchParams;
 }
 export default function ForgotPassword({
   searchParams,
