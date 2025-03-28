@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FormEvent } from "react";
 import { ExtractResult } from "@/types/extract";
+import Image from "next/image";
 
 export default function Extract() {
   const [url, setUrl] = useState("");
@@ -15,8 +15,9 @@ export default function Extract() {
     event.preventDefault();
     setError("");
     setResult(null);
+
     try {
-      const response = await fetch("/api/protected/extract", {
+      const response = await fetch("/api/extract", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,6 +37,10 @@ export default function Extract() {
     }
   };
 
+  useEffect(() => {
+    console.log(result);
+  }, [result]);
+
   return (
     <>
       <form onSubmit={onUrlSubmit} className="flex flex-col space-y-4">
@@ -43,7 +48,6 @@ export default function Extract() {
           placeholder="Enter recipe URL"
           type="text"
           required
-          name="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
@@ -57,27 +61,39 @@ export default function Extract() {
       )}
 
       {result && (
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold mb-2">Title</h2>
-          <p>{result.title}</p>
-        </div>
-      )}
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold mb-4">{result.title}</h2>
 
-      {result && (
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
-          <ul className="list-disc list-inside">
-            {result.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
+          <div>
+            <div className="flex flex-row justify-between">
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Ingredients</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {result.ingredients.map((ingredient, index) => (
+                    <li key={index}>{ingredient}</li>
+                  ))}
+                </ul>
+              </div>
+              {result.image && (
+                <div className="w-full md:w-1/3">
+                  <Image
+                    src={result.image}
+                    alt={result.title}
+                    width={400}
+                    height={300}
+                    className="rounded-lg object-cover w-full h-auto"
+                  />
+                </div>
+              )}
+            </div>
 
-          <h2 className="text-xl font-semibold mt-4 mb-2">Instructions</h2>
-          <ol className="list-decimal list-inside">
-            {result.instructions.map((instruction, index) => (
-              <li key={index}>{instruction}</li>
-            ))}
-          </ol>
+            <h3 className="text-xl font-semibold mt-4 mb-2">Instructions</h3>
+            <ol className="list-decimal list-inside space-y-1">
+              {result.instructions.map((instruction, index) => (
+                <li key={index}>{instruction}</li>
+              ))}
+            </ol>
+          </div>
         </div>
       )}
     </>
