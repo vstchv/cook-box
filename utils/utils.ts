@@ -1,3 +1,5 @@
+import { Message } from "@/components/form-message";
+import { SearchParams } from "@/types/search-params";
 import { redirect } from "next/navigation";
 
 /**
@@ -10,7 +12,25 @@ import { redirect } from "next/navigation";
 export function encodedRedirect(
   type: "error" | "success",
   path: string,
-  message: string,
+  message: string
 ) {
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
+}
+
+export function parseMessage(params?: SearchParams): Message | undefined {
+  if (!params) return undefined;
+
+  if (typeof params.success === "string") {
+    return { success: params.success };
+  }
+
+  if (typeof params.error === "string") {
+    return { error: params.error };
+  }
+
+  if (typeof params.message === "string") {
+    return { message: params.message };
+  }
+
+  return undefined;
 }
