@@ -4,11 +4,6 @@ import { cookies } from "next/headers";
 
 export const createServerClient = () => {
   const cookieStore = cookies();
-  console.log(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY,
-    "server"
-  );
 
   return createServerClientSupabase<Database>(
     process.env.SUPABASE_URL!,
