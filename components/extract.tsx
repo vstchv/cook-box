@@ -9,9 +9,7 @@ import { Bookmark } from "lucide-react";
 import { createBrowserClient } from "@/utils/supabase/client";
 
 export default function Extract() {
-  const [url, setUrl] = useState(
-    "https://www.bbcgoodfood.com/recipes/chocolate-cheesecake"
-  );
+  const [url, setUrl] = useState("");
   const [result, setResult] = useState<ExtractResult | null>(null);
   const [error, setError] = useState("");
 
@@ -19,7 +17,6 @@ export default function Extract() {
 
   const handleSaveRecipe = async () => {
     if (!result) return;
-    console.log(supabase);
     const {
       data: { user },
       error: userError,
@@ -30,7 +27,7 @@ export default function Extract() {
       return;
     }
 
-    const { error } = await supabase.from("recipes").insert({
+    const { error, status } = await supabase.from("recipes").insert({
       user_id: user.id,
       title: result.title,
       image_url: result.image,
@@ -38,6 +35,12 @@ export default function Extract() {
       instructions: result.instructions,
       source_url: url,
     });
+
+    if (status === 409) {
+      // TODO better error handling
+      alert("Already saved this recipe :) ");
+      return;
+    }
 
     if (error) {
       console.error("Failed to save recipe:", error);
