@@ -5,11 +5,47 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ExtractResult } from "@/types/extract";
 import Image from "next/image";
+import { Bookmark } from "lucide-react";
+import { createBrowserClient } from "@/utils/supabase/client";
 
 export default function Extract() {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState(
+    "https://www.bbcgoodfood.com/recipes/chocolate-cheesecake"
+  );
   const [result, setResult] = useState<ExtractResult | null>(null);
   const [error, setError] = useState("");
+
+  const supabase = createBrowserClient();
+
+  const handleSaveRecipe = async () => {
+    if (!result) return;
+    console.log(supabase);
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      alert("You must be logged in to save recipes.");
+      return;
+    }
+
+    const { error } = await supabase.from("recipes").insert({
+      user_id: user.id,
+      title: result.title,
+      image_url: result.image,
+      ingredients: result.ingredients,
+      instructions: result.instructions,
+      source_url: url,
+    });
+
+    if (error) {
+      console.error("Failed to save recipe:", error);
+      alert("Error saving recipe.");
+    } else {
+      alert("Recipe saved! 🍽️");
+    }
+  };
 
   const onUrlSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,6 +80,7 @@ export default function Extract() {
           placeholder="Enter recipe URL"
           type="text"
           required
+          autoComplete="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
@@ -58,8 +95,13 @@ export default function Extract() {
 
       {result && (
         <div className="mt-6">
-          <h2 className="text-2xl font-bold mb-4">{result.title}</h2>
-
+          <div className="flex flex-row justify-between">
+            <h2 className="text-2xl font-bold mb-4">{result.title}</h2>
+            <Button size="sm" onClick={handleSaveRecipe}>
+              <Bookmark className="w-4 h-4 mr-2" />
+              Save Recipe in Collection
+            </Button>
+          </div>
           <div>
             <div className="flex flex-row justify-between">
               <div>

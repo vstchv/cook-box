@@ -1,11 +1,16 @@
 import { Database } from "@/types/supabase";
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient as createServerClientSupabase } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export const createClient = () => {
+export const createServerClient = () => {
   const cookieStore = cookies();
+  console.log(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY,
+    "server"
+  );
 
-  return createServerClient<Database>(
+  return createServerClientSupabase<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!,
     {

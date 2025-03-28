@@ -3,12 +3,12 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import Link from "next/link";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { createClient } from "@/utils/supabase/server";
+import { createServerClient } from "@/utils/supabase/server";
 
 export default async function AuthButton() {
   const {
     data: { user },
-  } = await createClient().auth.getUser();
+  } = await createServerClient().auth.getUser();
 
   if (!hasEnvVars) {
     return (
@@ -54,6 +54,9 @@ export default async function AuthButton() {
           Sign out
         </Button>
       </form>
+      <Button asChild size="sm" variant={"default"}>
+        <Link href="/collection">My Collection</Link>
+      </Button>
     </div>
   ) : (
     <div className="flex gap-2">
