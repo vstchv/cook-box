@@ -37,10 +37,6 @@ export default function Extract() {
     }
   };
 
-  useEffect(() => {
-    console.log(result);
-  }, [result]);
-
   return (
     <>
       <form onSubmit={onUrlSubmit} className="flex flex-col space-y-4">

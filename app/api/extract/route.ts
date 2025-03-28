@@ -27,8 +27,6 @@ export async function POST(request: Request) {
 
     recipe.image = ogImage || "";
 
-    console.log(recipe.image);
-
     // Extract ingredients
     $(".ingredients-list__item").each((_, element) => {
       const ingredient = $(element).text().trim().replace(/\s+/g, " ");
