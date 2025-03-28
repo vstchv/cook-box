@@ -1,6 +1,6 @@
 import { signUpAction } from "@/app/actions";
-import { FormMessage, Message } from "@/components/form-message";
-import { SubmitButton } from "@/components/submit-button";
+import { AuthForm } from "@/components/auth-form";
+import { FormMessage } from "@/components/form-message";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SearchParams } from "@/types/search-params";
@@ -10,29 +10,37 @@ import Link from "next/link";
 interface SignUpPageProps {
   searchParams?: SearchParams;
 }
-export default function Signup({ searchParams }: SignUpPageProps) {
+export default function SignUp({ searchParams }: SignUpPageProps) {
   const message = parseMessage(searchParams);
-  if (message) {
+
+  if (message && "message" in message) {
     return (
       <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
-        {message && <FormMessage message={message} />}
+        <FormMessage message={message} />
       </div>
     );
   }
 
   return (
-    <>
-      <form className="flex flex-col min-w-64 max-w-64 mx-auto">
-        <h1 className="text-2xl font-medium">Sign up</h1>
-        <p className="text-sm text text-foreground">
+    <AuthForm
+      title="Sign up"
+      subtitle={
+        <>
           Already have an account?
-          <Link className="text-primary font-medium underline" href="/sign-in">
+          <Link className="text-primary underline ml-1" href="/sign-in">
             Sign in
           </Link>
-        </p>
-        <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
+        </>
+      }
+      action={signUpAction}
+      pendingText="Signing up..."
+      buttonText="Sign up"
+      message={message}
+      fields={
+        <>
           <Label htmlFor="email">Email</Label>
           <Input name="email" placeholder="you@example.com" required />
+
           <Label htmlFor="password">Password</Label>
           <Input
             type="password"
@@ -41,12 +49,8 @@ export default function Signup({ searchParams }: SignUpPageProps) {
             minLength={6}
             required
           />
-          <SubmitButton formAction={signUpAction} pendingText="Signing up...">
-            Sign up
-          </SubmitButton>
-          {message && <FormMessage message={message} />}
-        </div>
-      </form>
-    </>
+        </>
+      }
+    />
   );
 }
