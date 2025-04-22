@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config = {
   darkMode: ["class"],
@@ -18,6 +19,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: [...fontFamily.sans],
+        fredoka: ["var(--font-fredoka)", ...fontFamily.sans],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -70,10 +75,21 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        borderGlow: {
+          "0%": { "border-color": "rgba(255, 255, 255, 0.2)" },
+          "50%": { "border-color": "rgba(255, 255, 255, 0.5)" },
+          "100%": { "border-color": "rgba(255, 255, 255, 0.2)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "border-glow": "borderGlow 3s ease-in-out infinite",
+        "fade-in": "fadeIn 0.5s ease-out",
       },
     },
   },
